@@ -413,7 +413,12 @@ const UIManager = {
   stats(t) { this.el.hudStats.innerHTML = t; },
   hint(t) { if (!t) { this.el.hint.classList.remove('show'); } else { this.el.hint.innerHTML = t; this.el.hint.classList.add('show'); } },
   crosshair(on) { this.el.crosshair.classList.toggle('show', !!on); },
-  touch(on) { this.el.touchControls.classList.toggle('show', on && GameHub.isMobile); },
+  touch(on) {
+    const show = on && GameHub.isMobile;
+    this.el.touchControls.classList.toggle('show', show);
+    const tl = document.getElementById('touchLook');
+    if (tl) tl.style.display = show ? 'block' : 'none';
+  },
   toast(msg, color) {
     const c = document.getElementById('toasts');
     const n = document.createElement('div'); n.className = 'toast'; n.textContent = msg;
@@ -687,6 +692,7 @@ const GameHub = {
   init() {
     this.isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
     AudioManager.init(); UIManager.init(); SceneLoader.init(); Narrator.init();
+    document.getElementById('launcher').classList.add('show-gate');
     this.buildCards();
     this.bindUI();
     // launcher 3D ambient backdrop
@@ -725,6 +731,23 @@ const GameHub = {
       }
       grid.appendChild(card);
     });
+    // staggered reveal — triggered when the player enters the realm hall
+    const cards = Array.from(grid.children);
+    this._revealCards = () => cards.forEach(c => c.classList.add('in'));
+  },
+
+  showRealms() {
+    AudioManager.resume(); AudioManager.confirm();
+    LauncherFX.pulse && LauncherFX.pulse();
+    const l = document.getElementById('launcher');
+    l.classList.remove('show-gate'); l.classList.add('show-realms');
+    if (this._revealCards) this._revealCards();
+    const r = document.getElementById('realms'); if (r) r.scrollTop = 0;
+  },
+  showGate() {
+    AudioManager.ui();
+    const l = document.getElementById('launcher');
+    l.classList.remove('show-realms'); l.classList.add('show-gate');
   },
 
   bindUI() {
@@ -738,6 +761,13 @@ const GameHub = {
     document.getElementById('volSlider').addEventListener('input', e => AudioManager.setVolume(e.target.value / 100));
     document.getElementById('sensSlider').addEventListener('input', e => Input.sensitivity = e.target.value / 5);
     document.getElementById('audioToggle').addEventListener('click', e => e.target.textContent = AudioManager.toggle() ? '🔊 الصوت: مفعّل' : '🔇 الصوت: مغلق');
+    // ENTER the realms → switch view (no scrolling needed → works on phones)
+    const eb = document.getElementById('enterRealms');
+    if (eb) eb.addEventListener('click', () => this.showRealms());
+    const sh = document.getElementById('scrollHint');
+    if (sh) sh.addEventListener('click', () => this.showRealms());
+    const bg = document.getElementById('backToGate');
+    if (bg) bg.addEventListener('click', () => this.showGate());
     window.addEventListener('keydown', e => {
       if (e.code === 'Escape' && this.state === 'playing') this.togglePause();
     });
@@ -810,6 +840,9 @@ const GameHub = {
     this.paused = false;
     this.fade(true, () => {
       document.getElementById('launcher').classList.remove('hidden');
+      document.getElementById('launcher').classList.remove('show-gate');
+      document.getElementById('launcher').classList.add('show-realms');
+      if (this._revealCards) this._revealCards();
       LauncherFX.start();
       this.state = 'launcher';
       this.fade(false);
@@ -944,10 +977,14 @@ const LauncherFX = {
     this._loop();
   },
   stop() { this.running = false; cancelAnimationFrame(this.raf); },
+  pulse() { this._pulse = 1; AudioManager.tone && AudioManager.tone(220, 'sine', 0.5, 0.18); },
   _loop() {
     if (!this.running) return;
     const now = performance.now(); const dt = Math.min((now - this.last) / 1000, 0.05); this.last = now; this.t += dt;
     const t = this.t;
+    // ENTER whoosh decays over ~0.8s
+    this._pulse = Math.max(0, (this._pulse || 0) - dt * 1.3);
+    const pulse = this._pulse;
 
     // floating islands + crystals bob & spin
     this.shapes.forEach(m => {
@@ -958,11 +995,12 @@ const LauncherFX = {
 
     // portal pulse + rune rings spin
     if (this.portal) {
-      this.portal.children[0] && (this.portalSurf.material.opacity = 0.26 + Math.sin(t * 1.6) * 0.12);
-      this.portalSurf2.material.opacity = 0.22 + Math.sin(t * 1.6 + 1) * 0.12;
-      this.portalSurf.rotation.z += dt * 0.25; this.portalSurf2.rotation.z -= dt * 0.4;
-      this.portalLight.intensity = 2.0 + Math.sin(t * 2.2) * 0.6;
-      this.rings.forEach(r => { r.mesh.rotation.z += r.sp * dt; r.mesh.rotation.x += r.sp * 0.3 * dt; });
+      this.portal.children[0] && (this.portalSurf.material.opacity = 0.26 + Math.sin(t * 1.6) * 0.12 + pulse * 0.5);
+      this.portalSurf2.material.opacity = 0.22 + Math.sin(t * 1.6 + 1) * 0.12 + pulse * 0.5;
+      this.portalSurf.rotation.z += dt * (0.25 + pulse * 4); this.portalSurf2.rotation.z -= dt * (0.4 + pulse * 4);
+      this.portalLight.intensity = 2.0 + Math.sin(t * 2.2) * 0.6 + pulse * 6;
+      this.portal.scale.setScalar(1 + pulse * 0.12);
+      this.rings.forEach(r => { r.mesh.rotation.z += r.sp * dt * (1 + pulse * 5); r.mesh.rotation.x += r.sp * 0.3 * dt; });
     }
 
     // magical motes drift upward, wrap around
