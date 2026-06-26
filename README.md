@@ -1,2 +1,2 @@
-# Echoes-of-the-Lost-Realm-3D-game
-**🎮 Title:** Echoes of the Lost Realm  **📝 Description (300 chars):** A cinematic 3D puzzle adventure where you explore ancient ruins, frozen temples, and corrupted worlds. Solve complex puzzles across 20 immersive levels, uncover a hidden story, and restore balance to a collapsing dimension. Built for browser with stunning visuals.
+🎮 **Game Hub: Nexus Worlds**
+A futuristic 3D browser game platform where players explore 10 unique mini-games inside one unified world. From parkour cities and zombie survival to puzzles, racing, horror escapes, and gravity challenges. Each game features immersive mechanics, smooth controls, and progressive difficulty designed for PC and mobile gameplay.
