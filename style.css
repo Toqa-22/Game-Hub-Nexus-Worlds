@@ -438,3 +438,184 @@ html[dir="rtl"] .diff{left:auto;right:.6rem}
 @media (prefers-reduced-motion:reduce){
   .sigil,.hub-logo,.portal-glow,.rune-ring{animation:none}
 }
+
+/* ============================================================
+   ✦✦✦  ENTRY GATE v2 — two-stage cinematic launcher  ✦✦✦
+   STAGE 1: full-screen GATE · STAGE 2: REALM SELECTION HALL
+   ============================================================ */
+#launcher{ scroll-behavior:smooth; }
+
+/* ---------- STAGE 1 : THE GATE ---------- */
+.hero{
+  position:relative; min-height:100svh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; gap:.55rem;
+  padding:clamp(1.2rem,5vw,3rem) 1.2rem 2rem;
+}
+/* arcane rings framing the title (the "gate") */
+.hero-ring{
+  position:absolute; top:43%; left:50%; width:min(70vw,520px); aspect-ratio:1;
+  transform:translate(-50%,-50%); border-radius:50%; pointer-events:none; z-index:-1;
+  border:1.5px solid rgba(183,139,255,.30);
+  box-shadow:0 0 60px rgba(123,92,255,.20) inset, 0 0 50px rgba(123,92,255,.12);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 22px),#000 calc(100% - 21px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 22px),#000 calc(100% - 21px));
+  animation:gateSpin 26s linear infinite;
+}
+.hero-ring::before{
+  content:''; position:absolute; inset:14px; border-radius:50%;
+  background:conic-gradient(from 0deg,transparent,rgba(95,230,207,.55),transparent 30%,rgba(255,206,107,.5),transparent 60%,rgba(255,134,194,.5),transparent);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+}
+.hero-ring.r2{ width:min(52vw,380px); animation-duration:18s; animation-direction:reverse; border-color:rgba(95,230,207,.22); }
+@keyframes gateSpin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+
+.hero .sigil{ font-size:2.2rem; }
+.hero .hub-logo{ margin-top:.2rem; }
+.hero .hub-tag{ margin-top:.9rem; }
+
+/* the grand ENTER button */
+.enter-btn{
+  position:relative; margin-top:1.7rem; cursor:pointer;
+  display:inline-flex; align-items:center; gap:.85rem;
+  font-family:'Tajawal',sans-serif; font-weight:700;
+  font-size:clamp(1.05rem,3.4vw,1.5rem); letter-spacing:.04em; color:#190a2b;
+  padding:.95rem 2.4rem; border:none; border-radius:999px;
+  background:linear-gradient(100deg,var(--f-gold),var(--f-rose) 45%,var(--f-arcane));
+  background-size:200% auto;
+  box-shadow:0 10px 40px -8px rgba(183,139,255,.6), 0 0 0 1px rgba(255,255,255,.18) inset;
+  overflow:hidden; animation:enterPulse 2.6s ease-in-out infinite, enterShift 6s linear infinite;
+}
+.enter-btn .eb-rune{ font-size:1.15em; filter:drop-shadow(0 0 6px rgba(255,255,255,.6)); }
+.enter-btn::after{
+  content:''; position:absolute; inset:0; transform:translateX(-130%);
+  background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.6) 50%,transparent 80%);
+}
+.enter-btn:hover{ transform:translateY(-2px) scale(1.04); }
+.enter-btn:hover::after{ transform:translateX(130%); transition:transform .9s ease; }
+.enter-btn:active{ transform:scale(.98); }
+@keyframes enterPulse{ 0%,100%{ box-shadow:0 10px 40px -8px rgba(183,139,255,.5), 0 0 0 1px rgba(255,255,255,.18) inset; } 50%{ box-shadow:0 14px 60px -6px rgba(255,134,194,.7), 0 0 0 1px rgba(255,255,255,.28) inset; } }
+@keyframes enterShift{ to{ background-position:200% center; } }
+
+.scroll-hint{
+  position:absolute; bottom:1.4rem; left:50%; transform:translateX(-50%);
+  font-size:1.6rem; color:rgba(183,139,255,.7); animation:bobDown 1.6s ease-in-out infinite; pointer-events:none;
+}
+@keyframes bobDown{ 0%,100%{ transform:translate(-50%,0); opacity:.5; } 50%{ transform:translate(-50%,9px); opacity:1; } }
+
+/* ---------- STAGE 2 : REALM SELECTION HALL ---------- */
+#realms{
+  position:relative; min-height:100vh;
+  padding:1.2rem 1.2rem 3rem;
+  border-top:1px solid rgba(183,139,255,.16);
+  background:linear-gradient(180deg,transparent,rgba(11,6,24,.35) 14%);
+}
+.realm-intro{
+  text-align:center; color:rgba(214,202,255,.62); font-size:.9rem; margin:.2rem auto 1.4rem; letter-spacing:.02em;
+}
+/* ornate framed hall around the grid */
+.hall-frame{
+  position:relative; max-width:1200px; margin:0 auto; padding:1.6rem clamp(.8rem,2.5vw,1.8rem);
+  border:1px solid rgba(183,139,255,.20); border-radius:22px;
+  background:radial-gradient(1200px 400px at 50% -10%,rgba(123,92,255,.10),transparent 60%),
+            linear-gradient(180deg,rgba(22,12,42,.30),rgba(10,6,20,.25));
+  box-shadow:0 30px 80px -40px rgba(0,0,0,.9), 0 0 50px -20px rgba(123,92,255,.25) inset;
+}
+.hall-frame .corner{
+  position:absolute; width:26px; height:26px; border:2px solid var(--f-gold); opacity:.55;
+}
+.hall-frame .corner.tl{ top:10px; left:10px; border-right:0; border-bottom:0; border-radius:10px 0 0 0; }
+.hall-frame .corner.tr{ top:10px; right:10px; border-left:0; border-bottom:0; border-radius:0 10px 0 0; }
+.hall-frame .corner.bl{ bottom:10px; left:10px; border-right:0; border-top:0; border-radius:0 0 0 10px; }
+.hall-frame .corner.br{ bottom:10px; right:10px; border-left:0; border-top:0; border-radius:0 0 10px 0; }
+
+/* card entrance — realms rise into the hall when revealed */
+@keyframes riseIn{ from{ opacity:0; transform:translateY(26px) scale(.96); } to{ opacity:1; transform:translateY(0) scale(1); } }
+#cardGrid .game-card{ opacity:0; }
+#cardGrid .game-card.in{ animation:riseIn .6s cubic-bezier(.2,.8,.2,1) both; }
+#cardGrid .game-card:nth-child(1){animation-delay:.04s}
+#cardGrid .game-card:nth-child(2){animation-delay:.09s}
+#cardGrid .game-card:nth-child(3){animation-delay:.14s}
+#cardGrid .game-card:nth-child(4){animation-delay:.19s}
+#cardGrid .game-card:nth-child(5){animation-delay:.24s}
+#cardGrid .game-card:nth-child(6){animation-delay:.29s}
+#cardGrid .game-card:nth-child(7){animation-delay:.34s}
+#cardGrid .game-card:nth-child(8){animation-delay:.39s}
+#cardGrid .game-card:nth-child(9){animation-delay:.44s}
+#cardGrid .game-card:nth-child(10){animation-delay:.49s}
+
+@media (prefers-reduced-motion:reduce){
+  .hero-ring,.enter-btn,.scroll-hint{ animation:none; }
+  #cardGrid .game-card{ animation:none; opacity:1; }
+}
+
+/* ============================================================
+   ✦✦✦  ENTRY GATE v3 — VIEW SWITCH (mobile-safe)  ✦✦✦
+   Gate and Hall are full-screen states that cross-fade.
+   No page scrolling required to reach the games → works on phones.
+   ============================================================ */
+#launcher{ overflow:hidden; }                 /* views manage their own scroll */
+
+.hero, #realms{
+  position:absolute; inset:0; min-height:0; height:100%;
+  transition:opacity .5s ease, transform .55s cubic-bezier(.2,.8,.2,1), visibility .5s;
+}
+.hero{ padding:clamp(1rem,5vw,3rem) 1.2rem; }
+#realms{
+  overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y;
+  padding:clamp(3.4rem,7vw,4.5rem) 1rem calc(3rem + env(safe-area-inset-bottom));
+}
+
+/* --- GATE stage --- */
+#launcher.show-gate .hero{ opacity:1; visibility:visible; transform:none; pointer-events:auto; }
+#launcher.show-gate #realms{ opacity:0; visibility:hidden; transform:scale(1.05); pointer-events:none; }
+/* --- HALL stage --- */
+#launcher.show-realms .hero{ opacity:0; visibility:hidden; transform:scale(.94); pointer-events:none; }
+#launcher.show-realms #realms{ opacity:1; visibility:visible; transform:none; pointer-events:auto; }
+
+/* back-to-gate button (top corner of the hall) */
+.gate-back{
+  position:fixed; top:max(env(safe-area-inset-top),.8rem); right:.9rem; z-index:40;
+  font-family:'Tajawal',sans-serif; font-weight:700; font-size:.9rem; cursor:pointer;
+  color:#e9ddff; background:rgba(22,12,42,.7); border:1px solid rgba(183,139,255,.45);
+  border-radius:999px; padding:.5rem 1rem; backdrop-filter:blur(8px);
+  box-shadow:0 6px 24px -8px rgba(123,92,255,.5); transition:transform .15s ease, background .2s;
+}
+.gate-back:hover{ transform:scale(1.05); background:rgba(40,24,70,.8); }
+#launcher.show-gate .gate-back{ opacity:0; pointer-events:none; }
+
+/* keep the realm banner from being hidden under the fixed back button */
+#realms .realm-banner{ margin-top:.2rem; }
+
+/* ---------- responsive / phone tuning ---------- */
+@media (max-width:560px){
+  #cardGrid{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.8rem; }
+  .hall-frame{ padding:1rem .7rem; border-radius:16px; }
+  .thumb{ height:120px; }
+  .thumb-icon{ font-size:2.1rem; }
+  .card-body{ padding:.7rem .8rem .85rem; }
+  .card-body h3{ font-size:.98rem; }
+  .card-body p{ font-size:.74rem; min-height:0; margin-bottom:.6rem; }
+  .play-btn{ padding:.5rem; font-size:.82rem; }
+  .realm-no{ font-size:.58rem; }
+  .hero .hub-tag{ font-size:.72rem; }
+  .settings-bar{ gap:.5rem 1rem; padding:.7rem .9rem; }
+  .enter-btn{ padding:.85rem 1.8rem; }
+}
+/* very small phones: 2 columns still readable */
+@media (max-width:380px){
+  #cardGrid{ grid-template-columns:repeat(2,1fr); }
+}
+
+/* ---- mobile touch-action scoping (let the hall scroll, lock gameplay) ---- */
+body{ touch-action:manipulation; }                 /* allow panning the realm list */
+#glCanvas,#touchLook,#touchControls{ touch-action:none; }  /* but lock gameplay drags */
+#realms{ overscroll-behavior:contain; }            /* no pull-to-refresh while browsing */
+
+/* gate never clips on short/landscape phones */
+.hero{ overflow-y:auto; touch-action:pan-y; }
+@media (max-height:520px){
+  .hero{ justify-content:flex-start; gap:.4rem; padding-top:1.2rem; }
+  .hero-ring{ display:none; }
+}
