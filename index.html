@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>NEXUS ARCADE — مركز الألعاب ثلاثية الأبعاد</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 3D animated backdrop for launcher -->
+<canvas id="bgCanvas"></canvas>
+<!-- Main game render target -->
+<canvas id="glCanvas"></canvas>
+
+<!-- ============ LAUNCHER ============ -->
+<div id="launcher">
+  <header class="hub-header">
+    <div class="hub-logo orbitron">NEXUS ARCADE</div>
+    <div class="hub-sub">مركز الألعاب ثلاثية الأبعاد</div>
+    <div class="hub-tag">١٠ ألعاب كاملة · بدون خادم · تعمل في المتصفح</div>
+    <div class="settings-bar">
+      <div class="ctrl">🔊 الصوت <input type="range" id="volSlider" min="0" max="100" value="50"></div>
+      <div class="ctrl">🎯 الحساسية <input type="range" id="sensSlider" min="1" max="10" value="5"></div>
+      <button id="audioToggle">🔊 الصوت: مفعّل</button>
+    </div>
+  </header>
+
+  <div id="cardGrid"></div>
+
+  <div class="hub-footer">
+    تحكّم: <b>WASD/الأسهم</b> للحركة · <b>الفأرة</b> للنظر · <b>المسافة</b> للقفز/الإطلاق · <b>E</b> للتفاعل · <b>Shift</b> للركض · <b>Esc</b> للإيقاف · على الجوال استخدم العصا واللمس
+  </div>
+</div>
+
+<!-- ============ LOADING ============ -->
+<div id="loadScreen">
+  <div id="loadIcon">🎮</div>
+  <div id="loadGame" class="orbitron">تحميل</div>
+  <div class="load-track"><div id="loadBar"></div></div>
+  <div class="load-hint">جارٍ تجهيز العالم ثلاثي الأبعاد…</div>
+</div>
+
+<!-- ============ HUD ============ -->
+<div id="hud">
+  <div class="hud-top">
+    <div class="hud-left">
+      <button id="btnExit" class="hud-btn">⬅ خروج</button>
+      <button id="btnPause" class="hud-btn">⏸</button>
+      <span id="gameTitle" class="orbitron"></span>
+    </div>
+    <div id="hudStats"></div>
+  </div>
+  <div id="hudObjective"></div>
+</div>
+
+<div id="crosshair">
+  <svg width="26" height="26" viewBox="0 0 26 26">
+    <circle cx="13" cy="13" r="9" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
+    <line x1="13" y1="2" x2="13" y2="8" stroke="#fff" stroke-width="1.5"/>
+    <line x1="13" y1="18" x2="13" y2="24" stroke="#fff" stroke-width="1.5"/>
+    <line x1="2" y1="13" x2="8" y2="13" stroke="#fff" stroke-width="1.5"/>
+    <line x1="18" y1="13" x2="24" y2="13" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="13" cy="13" r="1.5" fill="#fff"/>
+  </svg>
+</div>
+
+<div id="hint"></div>
+<div id="flashVignette"></div>
+<div id="toasts"></div>
+
+<!-- ============ TOUCH CONTROLS ============ -->
+<div id="touchLook"></div>
+<div id="touchControls">
+  <div id="joyZone"><div id="joyKnob"></div></div>
+  <div class="btn-stack">
+    <div id="btnAction" class="tbtn">إطلاق</div>
+    <div id="btnJump" class="tbtn">قفز</div>
+    <div id="btnInteract" class="tbtn">تفاعل<br>E</div>
+    <div id="btnAlt" class="tbtn">ركض</div>
+  </div>
+</div>
+
+<!-- ============ PAUSE ============ -->
+<div id="pauseMenu" class="overlay">
+  <h2 class="orbitron">⏸ متوقف</h2>
+  <button id="btnResume" class="ov-btn primary">▶ استئناف</button>
+  <button id="btnRestart" class="ov-btn">↺ إعادة</button>
+  <button id="btnQuit" class="ov-btn">🏠 المركز الرئيسي</button>
+</div>
+
+<!-- ============ END ============ -->
+<div id="overlayEnd" class="overlay">
+  <h2 id="endTitle" class="orbitron"></h2>
+  <p id="endMsg"></p>
+  <button id="endRetry" class="ov-btn primary">↺ إعادة المحاولة</button>
+  <button id="endHub" class="ov-btn">🏠 المركز الرئيسي</button>
+</div>
+
+<!-- ============ Fader ============ -->
+<div id="fader" class="show"></div>
+
+<!-- ============ Scripts ============ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="main.js"></script>
+<script src="games/game1.js"></script>
+<script src="games/game2.js"></script>
+<script src="games/game3.js"></script>
+<script src="games/game4.js"></script>
+<script src="games/game5.js"></script>
+<script src="games/game6.js"></script>
+<script src="games/game7.js"></script>
+<script src="games/game8.js"></script>
+<script src="games/game9.js"></script>
+<script src="games/game10.js"></script>
+</body>
+</html>
